@@ -31,8 +31,8 @@ class RatingsBreakdown (MRJob):
 
     # This function sorts the List from reducer_sum_ratings_counts and yields the Key-Value pair again
     def reduce_sort_counts(self, _, movies):
-        for value, key in sorted(movies, reverse=True):
-            yield (key, int(value))
+        for rating, movieID in sorted(movies, reverse=True):
+            yield (int(movieID), int(rating))
 
 if __name__ == '__main__': 
     RatingsBreakdown.run()
