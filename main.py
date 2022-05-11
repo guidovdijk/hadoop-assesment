@@ -15,6 +15,9 @@ class RatingsBreakdown (MRJob):
             MRStep(reducer=self.reduce_sort_counts)
         ]
 
+    """
+    Grade 6: Map the movieID and the count of the rating
+    """
     def mapper_get_rating_count(self, _, line):
         # Split items by every tab key and save them in their variables corresponding to the position.
         (userID, movieID, rating, timestamp) = line.split('\t')
@@ -23,12 +26,19 @@ class RatingsBreakdown (MRJob):
         # because we do not care about what rating it is, just if there is a rating, we can return 1.
         yield movieID, 1
 
+    """
+    Grade 6: Sum the rating of each movieID
+    """
     # MRJob automatically sorts data based on the Key value.
     # To make sure we can sort based on the amount of ratings we yield a list with the data and a None as key, 
     # This way we can sort the list in the next step.
     def reducer_sum_ratings_counts(self, movieID, rating):
         yield None, (sum(rating), movieID)
 
+
+    """
+    Grade 8: Sort the MovieID based on the count of the rating
+    """
     # This function sorts the List from reducer_sum_ratings_counts and yields the Key-Value pair again
     def reduce_sort_counts(self, _, movies):
         for rating, movieID in sorted(movies, reverse=True):
